@@ -1,0 +1,7 @@
+apiVersion: cninf.lil.harshjha.com/v1alpha1
+kind: ObjStore
+metadata:
+  name: crd-01
+spec:
+  name: hj-crd-s3
+  locked: false
