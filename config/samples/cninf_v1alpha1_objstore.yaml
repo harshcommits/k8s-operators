@@ -1,0 +1,14 @@
+apiVersion: cninf.lil.harsh.com/v1alpha1
+kind: ObjStore
+metadata:
+  labels:
+    app.kubernetes.io/name: objstore
+    app.kubernetes.io/instance: objstore-sample
+    app.kubernetes.io/part-of: k8s-operators
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: k8s-operators
+  name: hjs3-v1
+spec:
+  # TODO(user): Add fields here
+  name: hjs3-v1-01
+  locked: false
