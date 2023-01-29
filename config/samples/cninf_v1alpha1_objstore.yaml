@@ -9,6 +9,5 @@ metadata:
     app.kubernetes.io/created-by: k8s-operators
   name: hjs3-v1
 spec:
-  # TODO(user): Add fields here
   name: hjs3-v1-01
   locked: false

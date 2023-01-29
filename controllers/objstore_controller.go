@@ -55,6 +55,7 @@ const (
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *ObjStoreReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	// _ = log.FromContext(ctx)
 
 	instance := &cninfv1alpha1.ObjStore{}
 	if err := r.Get(ctx, req.NamespacedName, instance); err != nil {
