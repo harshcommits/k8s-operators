@@ -33,13 +33,6 @@ type ObjStoreReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-const (
-	PENDING_STATE  = "PENDING"
-	CREATING_STATE = "CREATING"
-	CREATED_STATE  = "CREATED"
-	ERROR_STATE    = "ERROR"
-)
-
 //+kubebuilder:rbac:groups=cninf.lil.harsh.com,resources=objstores,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=cninf.lil.harsh.com,resources=objstores/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=cninf.lil.harsh.com,resources=objstores/finalizers,verbs=update
@@ -55,11 +48,10 @@ const (
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *ObjStoreReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	// _ = log.FromContext(ctx)
 
 	instance := &cninfv1alpha1.ObjStore{}
 	if err := r.Get(ctx, req.NamespacedName, instance); err != nil {
-		log.Error(err, "unable to find resource")
+		log.Error(err, "unable to get resource")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	if instance.Status.State == "" {
