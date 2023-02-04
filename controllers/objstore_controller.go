@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	"k8s-operators/vendor/sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -74,13 +74,32 @@ func (r *ObjStoreReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		if instance.Status.State == "" {
 			instance.Status.State = cninfv1alpha1.PENDING_STATE
 			r.Status().Update(ctx, instance)
+			controllerutil.AddFinalizer(instance, finalizer)
+			if err := r.Update(ctx, instance); err != nil {
+				return ctrl.Result{}, err
+			}
+			if instance.Status.State == cninfv1alpha1.PENDING_STATE {
+				log.Info("starting to create resources")
+				if err := r.createResources(ctx, instance); err != nil {
+					instance.Status.State = cninfv1alpha1.ERROR_STATE
+					r.Status().Update(ctx, instance)
+					log.Error(err, "error creating bucket")
+					return ctrl.Result{}, err
+				}
+			}
 		}
-	}
-	controllerutil.AddFinalizer(instance, finalizer)
-	if err := r.Update(ctx, instance); err != nil {
-		return ctrl.Result{}, err
 	} else {
-		log.Info("deletion failed")
+		log.Info("deletion flow")
+		if err := r.deleteResources(ctx, instance); err != nil {
+			instance.Status.State = cninfv1alpha1.ERROR_STATE
+			r.Status().Update(ctx, instance)
+			log.Error(err, "error deleting bucket")
+			return ctrl.Result{}, err
+		}
+		controllerutil.RemoveFinalizer(instance, finalizer)
+		if err := r.Update(ctx, instance); err != nil {
+			return ctrl.Result{}, err
+		}
 	}
 
 	// TODO(user): your logic here
@@ -155,7 +174,7 @@ func (r *ObjStoreReconciler) deleteResources(ctx context.Context, objStore *cnin
 	// now delete the configmap
 	configmap := &v1.ConfigMap{}
 	err = r.Get(ctx, client.ObjectKey{
-		Name:      fmt.Sprintf(configMapName, &objStore.Name),
+		Name:      fmt.Sprintf(configMapName, objStore.Name),
 		Namespace: objStore.Namespace,
 	}, configmap)
 

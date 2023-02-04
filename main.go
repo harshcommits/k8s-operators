@@ -23,8 +23,6 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
-	"k8s-operators/vendor/github.com/aws/aws-sdk-go/aws/credentials"
-
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -118,7 +116,7 @@ func main() {
 	if err = (&controllers.ObjStoreReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-		S3svc:  s3.New(sess),
+		S3Svc:  s3.New(sess),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ObjStore")
 		os.Exit(1)
