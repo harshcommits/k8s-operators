@@ -71,7 +71,19 @@ spec:
         args:
         - --leader-elect
         image: controller:latest
+        imagePullPolicy: IfNotPresent
         name: manager
+        env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: objstore-secret
+                key: AWS_SECRET_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: objstore-secret
+                key: AWS_SECRET_ACCESS_KEY
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
