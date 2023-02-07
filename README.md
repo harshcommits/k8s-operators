@@ -1,8 +1,10 @@
 # k8s-operators
-// TODO(user): Add simple overview of use/purpose
+
+This is an example of using the operator framework to generate a CRD to perform certain functions.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+
+The operator framework **kubebuilder** has been used here to create the CRD **ObjStore** which creates S3 buckets in AWS using YAML definition.
 
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
@@ -16,7 +18,7 @@ kubectl apply -f config/samples/
 ```
 
 2. Build and push your image to the location specified by `IMG`:
-
+ 
 ```sh
 make docker-build docker-push IMG=<some-registry>/k8s-operators:tag
 ```
