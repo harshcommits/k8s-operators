@@ -1,0 +1,7 @@
+apiVersion: cninf.lil.harsh.com/v1alpha1
+kind: ObjStore
+metadata:
+  name: hjs3-helm
+spec:
+  name: hjs3-helm-01
+  locked: false
